@@ -16,7 +16,7 @@ import store from './store'
 import Link, { nodeSize } from './Link.vue'
 import LeaderLine from 'leader-line-vue'
 
-
+let arrows 
 
 export default {
     components:{Link},
@@ -55,61 +55,33 @@ export default {
         },
     },
     mounted() {
-        this.initArrows(store.data)
+        arrows = initArrows(store.data)
     },
     updated(){
-        // this.initArrows(store.data)
-
-        store.arrows.forEach(line => { line.position()})
-    },
-    // data(){
-    //     return {
-    //         arrows: []
-    //     }
-    // },
-    methods: {
-        initArrows(node, graphHeight = 0) { // при монтировании?
-            // links.push(<Link link={node} />)
-            if (graphHeight + 1 > store.displayDepth)
-                return store.arrows
-            for (let child of node.children) {
-                let startElement = document.getElementById(node.id)
-                let endElement = document.getElementById(child.id)
-                let options = {
-                    color: '#6895e5',
-                    path: 'straight',
-                    startSocket: 'bottom',
-                    endSocket: 'top'
-                }
-                let line = LeaderLine.setLine(startElement, endElement, options)
-                // LeaderLine.positionByWindowResize = false
-                store.arrows.push(line)
-                this.initArrows(child, graphHeight + 1)
-            }
-
-    }
+        arrows.forEach(line => line.position())
     }
 }
 
-// function initArrows (node, graphHeight = 0){ // при монтировании?
-//     // links.push(<Link link={node} />)
-//     if (graphHeight + 1 > store.displayDepth)
-//         return arrows
-//     for (let child of node.children) {
-//         let startElement = document.getElementById(node.id)
-//         let endElement = document.getElementById(child.id)
-//         let options = {
-//             color: '#6895e5',
-//             path: 'straight',
-//             startSocket: 'bottom',
-//             endSocket: 'top'
-//         }
-//         let line = LeaderLine.setLine(startElement, endElement, options)
-//         // LeaderLine.positionByWindowResize = false
-//         arrows.push(line)
-//         initArrows(child, graphHeight + 1)
-//     }
-
+function initArrows(node, graphHeight = 0, arrows=[]){ // при монтировании?
+    // links.push(<Link link={node} />)
+    if (graphHeight + 1 > store.displayDepth)
+        return arrows
+    for (let child of node.children) {
+        let startElement = document.getElementById(node.id)
+        let endElement = document.getElementById(child.id)
+        let options = {
+            color: '#6895e5',
+            path: 'straight',
+            startSocket: 'bottom',
+            endSocket: 'top'
+        }
+        let line = LeaderLine.setLine(startElement, endElement, options)
+        // LeaderLine.positionByWindowResize = false
+        arrows.push(line)
+        initArrows(child, graphHeight + 1, arrows)
+    }
+    return arrows
+}
     
 
 </script>
