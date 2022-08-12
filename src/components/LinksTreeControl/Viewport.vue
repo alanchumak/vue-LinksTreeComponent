@@ -58,7 +58,7 @@ export default {
         this.initArrows(store.data)
     },
     updated(){
-        this.initArrows(store.data)
+        // this.initArrows(store.data)
 
         store.arrows.forEach(line => { line.position()})
     },
