@@ -58,33 +58,34 @@ export default {
         this.initArrows(store.data)
     },
     updated(){
-        // initArrows(store.data)
-        this.arrows.forEach(line => line.position())
+        this.initArrows(store.data)
+
+        store.arrows.forEach(line => { line.position()})
     },
-    data(){
-        return {
-            arrows: []
-        }
-    },
+    // data(){
+    //     return {
+    //         arrows: []
+    //     }
+    // },
     methods: {
-         initArrows(node, graphHeight = 0){ // при монтировании?
-    // links.push(<Link link={node} />)
-    if (graphHeight + 1 > store.displayDepth)
-        return this.arrows
-    for (let child of node.children) {
-        let startElement = document.getElementById(node.id)
-        let endElement = document.getElementById(child.id)
-        let options = {
-            color: '#6895e5',
-            path: 'straight',
-            startSocket: 'bottom',
-            endSocket: 'top'
-        }
-        let line = LeaderLine.setLine(startElement, endElement, options)
-        // LeaderLine.positionByWindowResize = false
-        this.arrows.push(line)
-        this.initArrows(child, graphHeight + 1)
-    }
+        initArrows(node, graphHeight = 0) { // при монтировании?
+            // links.push(<Link link={node} />)
+            if (graphHeight + 1 > store.displayDepth)
+                return store.arrows
+            for (let child of node.children) {
+                let startElement = document.getElementById(node.id)
+                let endElement = document.getElementById(child.id)
+                let options = {
+                    color: '#6895e5',
+                    path: 'straight',
+                    startSocket: 'bottom',
+                    endSocket: 'top'
+                }
+                let line = LeaderLine.setLine(startElement, endElement, options)
+                // LeaderLine.positionByWindowResize = false
+                store.arrows.push(line)
+                this.initArrows(child, graphHeight + 1)
+            }
 
     }
     }

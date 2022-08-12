@@ -58,6 +58,7 @@ const step = 5
 
 export default {
     components: { Slider },
+    // props: {arrows: Array},
     data() {
         return { value: 100 }
     },
@@ -65,6 +66,9 @@ export default {
         onChanged(value){
             this.value = value
             store.scaleChanged(value/100)
+            let newLineSize = Math.round((4*value)/100)
+            store.arrows.forEach(line => line.size = newLineSize)
+
         },
         onDecreaseClicked(){
             let newValue = (this.value - step < minValue) ? minValue : this.value - step 

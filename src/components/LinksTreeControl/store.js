@@ -6,7 +6,7 @@ const store = reactive({
     displayDepth: 3,
     scale: 1,
     data,
-    linkCoordinates: initRectCoords(data, 3, 1),
+    linkCoordinates: initRectCoords(data, 3,1),
     displayDepthChanged(displayDepth) {
         this.displayDepth = displayDepth
         this.linkCoordinates = initRectCoords(data, displayDepth, this.scale)
@@ -14,7 +14,8 @@ const store = reactive({
     scaleChanged(scale) {
         this.scale = scale
         this.linkCoordinates = initRectCoords(data, this.displayDepth, scale)
-    }
+    },
+    arrows: []
 })
 
 export default store
