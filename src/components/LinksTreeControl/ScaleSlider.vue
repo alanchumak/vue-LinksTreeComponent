@@ -10,7 +10,7 @@
                 :max="100" 
                 :step="5"
                 class="slider-blue"
-                tooltips="false" 
+                
                 />
         </div>
         <button @click="onIncreaseClicked">+</button>

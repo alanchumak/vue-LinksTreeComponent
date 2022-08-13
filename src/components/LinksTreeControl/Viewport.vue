@@ -9,6 +9,7 @@
 import store from './store'
 import Link, { nodeSize } from './Link.vue'
 import LeaderLine from 'leader-line-vue'
+import { watch } from 'vue'
 
 let arrows 
 
@@ -38,17 +39,49 @@ export default {
     },
     updated(){
         // at depth change
-        arrows.forEach(line => line.remove())
-        arrows = initArrows(store.data)
+        // arrows.forEach(line => line.remove())
+        // arrows = initArrows(store.data)
 
         // at scale change
-        let newLineSize = Math.round(4 * store.scale)
-        arrows.forEach(line => {
-            line.size = newLineSize
-            // line.position()
-        })
+        // let newLineSize = Math.round(4 * store.scale)
+        // arrows.forEach(line => {
+        //     line.size = newLineSize
+        //     // line.position()
+        // })
 
     },
+
+
+setup(){
+    watch(
+        () => store.scale,
+        (scale) => {
+            let newLineSize = Math.round(4 * scale)
+            arrows.forEach(line => {
+                line.size = newLineSize
+                line.position()
+            })
+        },
+        {flush: 'post'}
+    )
+
+    watch(
+        () => store.displayDepth,
+        () => {
+            arrows.forEach(line => line.remove())
+            arrows = initArrows(store.data)
+
+            let newLineSize = Math.round(4 * store.scale)
+            arrows.forEach(line => {
+                line.size = newLineSize
+                // line.position()
+            })
+        },
+        { flush: 'post' }
+    )
+
+}
+
 }
 
 function initRects(node, graphHeight = 0, rects=[]){ // при монтировании?
@@ -69,20 +102,23 @@ function initArrows(node, graphHeight = 0, arrows=[]){ // при монтиро�
         // return arrows
         return arrows
     for (let child of node.children) {
-        let startElement = document.getElementById(node.id)
-        let endElement = document.getElementById(child.id)
-        let options = {
-            color: '#6895e5',
-            path: 'straight',
-            startSocket: 'bottom',
-            endSocket: 'top'
-        }
-        let line = LeaderLine.setLine(startElement, endElement, options)
-        // LeaderLine.positionByWindowResize = false
-        arrows.push(line)
+        arrows.push(createLine(node.id, child.id))
         initArrows(child, graphHeight + 1, arrows)
     }
     return arrows
+}
+
+const lineOptions = {
+    color: '#6895e5',
+    path: 'straight',
+    startSocket: 'bottom',
+    endSocket: 'top'
+}
+
+function createLine(startId, endId){
+    let startEl = document.getElementById(startId)
+    let endEl = document.getElementById(endId)
+    return LeaderLine.setLine(startEl, endEl, lineOptions)
 }
     
 </script>
