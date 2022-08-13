@@ -45,7 +45,7 @@ export default {
         let newLineSize = Math.round(4 * store.scale)
         arrows.forEach(line => {
             line.size = newLineSize
-            line.position()
+            // line.position()
         })
 
     },
