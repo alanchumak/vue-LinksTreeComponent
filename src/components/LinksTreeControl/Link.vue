@@ -15,10 +15,8 @@ export default {
         point(){
             return store.linkCoordinates[this.link.id]
         },
-        // scale(){ return store.scale},
         style(){
             return {
-                // position: "absolute",
                 left: `${this.point.x}px`,
                 top: `${this.point.y}px`,
                 width: `${155 * store.scale}px`,

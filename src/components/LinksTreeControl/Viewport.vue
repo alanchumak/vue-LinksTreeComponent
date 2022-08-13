@@ -1,15 +1,9 @@
 <template>
     <div class="viewport" :style="style">
-        <Link v-for="item in links" :key="item.id" :link="item" />
+        <Link v-for="item in rects" :key="item.id" :link="item" />
     </div>
 </template>
 
-<style scoped>
-.viewport {
-    position: relative;
-}
-
-</style>
 
 <script>
 import store from './store'
@@ -21,23 +15,8 @@ let arrows
 export default {
     components:{Link},
     computed: {
-        links(){
-            let links = []
-            
-            const init = (node, graphHeight = 0) => { // при монтировании?
-                links.push(node)
-                if (graphHeight + 1 > store.displayDepth)
-                    return
-                for (let child of node.children) {
-                    // arrows.push(<Arrow parentId={node.id} childId={child.id} />)
-                    init(child, graphHeight + 1)
-                }
-                // initArrows()
-            }
-
-            init(store.data)
-            // initArrows(store.data)
-            return links
+        rects() {
+            return initRects(store.data)
         },
         size(){
             let points = Object.values(store.linkCoordinates);
@@ -58,13 +37,36 @@ export default {
         arrows = initArrows(store.data)
     },
     updated(){
-        arrows.forEach(line => line.position())
+        // at depth change
+        arrows.forEach(line => line.remove())
+        arrows = initArrows(store.data)
+
+        // at scale change
+        let newLineSize = Math.round(4 * store.scale)
+        arrows.forEach(line => {
+            line.size = newLineSize
+            line.position()
+        })
+
+    },
+}
+
+function initRects(node, graphHeight = 0, rects=[]){ // при монтировании?
+    // console.log(store.displayDepth)
+    rects.push(node)
+    if (graphHeight + 1 > store.displayDepth)
+        return rects
+    for (let child of node.children) {
+        initRects(child, graphHeight + 1, rects)
     }
+    return rects
+
 }
 
 function initArrows(node, graphHeight = 0, arrows=[]){ // при монтировании?
     // links.push(<Link link={node} />)
     if (graphHeight + 1 > store.displayDepth)
+        // return arrows
         return arrows
     for (let child of node.children) {
         let startElement = document.getElementById(node.id)
@@ -83,5 +85,11 @@ function initArrows(node, graphHeight = 0, arrows=[]){ // при монтиро�
     return arrows
 }
     
-
 </script>
+
+
+<style scoped>
+.viewport {
+    position: relative;
+}
+</style>

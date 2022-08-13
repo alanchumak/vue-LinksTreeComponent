@@ -2,8 +2,16 @@
     <div class="bar">
         <button @click="onDecreaseClicked" class="minusBtn">-</button>
         <div class="slider">
-            <Slider :value="value" @update="onChanged" :lazy="false" :min="40" :max="100" :step="5"
-                class="slider-blue" />
+            <Slider 
+                :value="value" 
+                @update="onChanged" 
+                :lazy="false" 
+                :min="40" 
+                :max="100" 
+                :step="5"
+                class="slider-blue"
+                tooltips="false" 
+                />
         </div>
         <button @click="onIncreaseClicked">+</button>
     </div>
@@ -58,7 +66,6 @@ const step = 5
 
 export default {
     components: { Slider },
-    // props: {arrows: Array},
     data() {
         return { value: 100 }
     },
@@ -66,9 +73,6 @@ export default {
         onChanged(value){
             this.value = value
             store.scaleChanged(value/100)
-            let newLineSize = Math.round((4*value)/100)
-            store.arrows.forEach(line => line.size = newLineSize)
-
         },
         onDecreaseClicked(){
             let newValue = (this.value - step < minValue) ? minValue : this.value - step 

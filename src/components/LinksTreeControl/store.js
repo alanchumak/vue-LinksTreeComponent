@@ -14,8 +14,9 @@ const store = reactive({
     scaleChanged(scale) {
         this.scale = scale
         this.linkCoordinates = initRectCoords(data, this.displayDepth, scale)
+
+        let newLineSize = Math.round(4 * scale)
     },
-    arrows: []
 })
 
 export default store
